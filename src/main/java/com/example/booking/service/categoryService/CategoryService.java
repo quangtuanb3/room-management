@@ -1,4 +1,4 @@
-package com.example.booking.service.typeService;
+package com.example.booking.service.categoryService;
 
 import com.example.booking.repository.CategoryRepository;
 import com.example.booking.service.response.SelectOptionResponse;
@@ -12,8 +12,6 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class CategoryService {
     private final CategoryRepository categoryRepository;
-
-
     public List<SelectOptionResponse> findAll(){
         return categoryRepository.findAll().stream()
                 .map(category -> new SelectOptionResponse(category.getId().toString(), category.getName()))

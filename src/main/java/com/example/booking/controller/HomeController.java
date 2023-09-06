@@ -1,6 +1,7 @@
 package com.example.booking.controller;
 
-import com.example.booking.service.typeService.CategoryService;
+
+import com.example.booking.service.categoryService.CategoryService;
 import com.example.booking.service.typeService.TypeService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
