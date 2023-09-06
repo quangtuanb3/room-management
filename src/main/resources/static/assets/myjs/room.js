@@ -282,40 +282,7 @@ const onSearch = (e) => {
 }
 
 ePriceSelectSearch.onchange = () => {
-    let min;
-    let max;
-    switch (ePriceSelectSearch.value) {
-        case "1": {
-            min = 0;
-            max = 500;
-            break;
-        }
-        case "2": {
-            min = 501;
-            max = 1000;
-            break;
-        }
-        case "3": {
-            min = 1001;
-            max = 1500;
-            break;
-        }
-        case "4": {
-            min = 1501;
-            max = 2000;
-            break;
-        }
-        case "5": {
-            min = 2001;
-            max = 50000;
-            break;
-        }
-        default: {
-            min = 0;
-            max = 50000;
-            break;
-        }
-    }
+    let [min, max] = ePriceSelectSearch.value.split("-");
     pageable.priceStart = min;
     pageable.priceEnd = max;
     getList();
