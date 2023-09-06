@@ -1,0 +1,11 @@
+#priceSearch {
+    position: absolute;
+    bottom: -100%;
+    left: 17%;
+
+}
+#priceSearch select{
+    background-color: #af2aad;
+    color: white;
+    text-align: center;
+}

@@ -44,6 +44,7 @@ public class RoomService {
     }
 
     public Page<RoomListResponse> findAll(Pageable pageable, Long priceStart, Long priceEnd, String search) {
+        search = "%" + search+"%";
         return roomRepository.searchEverything(search, priceStart, priceEnd, pageable)
                 .map(room -> RoomListResponse.builder()
                         .id(room.getId())
@@ -91,6 +92,12 @@ public class RoomService {
         roomCategoryRepository.saveAll(roomCategories);
         roomRepository.save(roomDB);
 
+        return true;
+    }
+
+    public Boolean delete(Long id) {
+        roomCategoryRepository.deleteRoomCategoriesByRoomId(id);
+        roomRepository.deleteById(id);
         return true;
     }
 }

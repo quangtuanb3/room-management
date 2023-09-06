@@ -8,7 +8,7 @@ const eHeaderPrice = document.getElementById("header-price");
 const eModalTitle = document.getElementById("staticBackdropLabel");
 const submitBtn = document.getElementById("submit-btn");
 const eOptionsType = eSelectType.querySelectorAll("option");
-
+const ePriceSelectSearch = document.getElementById("PriceSelectSearch");
 let roomDetail;
 let pageable = {
     page: 1,
@@ -60,7 +60,9 @@ function getDataFromForm(form) {
 }
 
 async function getList() {
-    const response = await fetch(`/api/rooms?page=${pageable.page - 1 || 0}&sort=${pageable.sortCustom || 'id,desc'}&search=${pageable.search || ''}&priceStart=${pageable.priceStart || ''}&priceEnd=${pageable.priceEnd || ''}`);
+    let url = `/api/rooms?page=${pageable.page - 1 || 0}&sort=${pageable.sortCustom || 'id,desc'}&search=${pageable.search || ''}&priceStart=${pageable.priceStart || ''}&priceEnd=${pageable.priceEnd || ''}`;
+    console.log(url);
+    const response = await fetch(url);
     const result = await response.json();
     pageable = {
         ...pageable,
@@ -178,11 +180,12 @@ function renderItemStr(item) {
                         <div class="dropdown-menu">
                         <button class="dropdown-item" onclick="showEdit(${item.id})"
                         data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                        ><i class="bx bx-edit-alt me-1"></i> Edit</button
-                            >
+                        ><i class="bx bx-edit-alt me-1"></i> Edit</button>
                         <button class="dropdown-item" 
-                        ><i class="bx bx-trash me-1"></i> Delete</button
-                        >
+                        onclick='if (confirm("Are you sure?")) { deleteRoom(${item.id}); }'>
+                        <i class="bx bx-trash me-1"></i> Delete
+                        </button>
+
               </div>
             </div>
                     </td>
@@ -252,4 +255,68 @@ async function callEditAPI(data) {
     }
 
     $('#staticBackdrop').modal('hide');
+}
+
+async function deleteRoom(id) {
+    const res = await fetch(`/api/rooms/${id}`, { // Replace with your API endpoint for updating a film by ID
+        method: 'DELETE', // Use the appropriate HTTP method for updating (e.g., PUT or PATCH)
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(id)
+    });
+
+    if (res.ok) {
+        alert("Deleted");
+        await getList();
+    } else {
+        alert("Something went wrong!")
+    }
+
+}
+
+const onSearch = (e) => {
+    e.preventDefault()
+    pageable.search = eSearch.value;
+    getList();
+}
+
+ePriceSelectSearch.onchange = () => {
+    let min;
+    let max;
+    switch (ePriceSelectSearch.value) {
+        case "1": {
+            min = 0;
+            max = 500;
+            break;
+        }
+        case "2": {
+            min = 501;
+            max = 1000;
+            break;
+        }
+        case "3": {
+            min = 1001;
+            max = 1500;
+            break;
+        }
+        case "4": {
+            min = 1501;
+            max = 2000;
+            break;
+        }
+        case "5": {
+            min = 2001;
+            max = 50000;
+            break;
+        }
+        default: {
+            min = 0;
+            max = 50000;
+            break;
+        }
+    }
+    pageable.priceStart = min;
+    pageable.priceEnd = max;
+    getList();
 }

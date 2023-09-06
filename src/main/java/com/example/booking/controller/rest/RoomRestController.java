@@ -31,7 +31,7 @@ public class RoomRestController {
     public ResponseEntity<Page<RoomListResponse>> list(@PageableDefault(size = 5) Pageable pageable,
                                                        @RequestParam(defaultValue = "") String search,
                                                        @RequestParam(defaultValue = "0") Long priceStart,
-                                                       @RequestParam(defaultValue = "0") Long priceEnd) {
+                                                       @RequestParam(defaultValue = "50000000") Long priceEnd) {
         return new ResponseEntity<>(roomService.findAll(pageable, priceStart, priceEnd, search), HttpStatus.OK);
     }
 
@@ -47,9 +47,18 @@ public class RoomRestController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Boolean> getFilmById(@PathVariable Long id,@RequestBody RoomSaveRequest request ) {
+    public ResponseEntity<Boolean> update(@PathVariable Long id,@RequestBody RoomSaveRequest request ) {
     Boolean isUpdated = roomService.updateRoom(id, request);
         if (isUpdated) {
+            return ResponseEntity.ok(true);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Boolean> delete(@PathVariable Long id) {
+        Boolean isDeleted = roomService.delete(id);
+        if (isDeleted) {
             return ResponseEntity.ok(true);
         } else {
             return ResponseEntity.notFound().build();
